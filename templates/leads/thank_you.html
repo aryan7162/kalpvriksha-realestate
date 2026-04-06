@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Thank You | Kalpvriksh Real Estate{% endblock %}
+
+{% block content %}
+<div class="min-h-[80vh] flex items-center justify-center bg-luxury-ivory relative overflow-hidden">
+    <!-- Decorative Background Elements -->
+    <div class="absolute top-0 left-0 w-64 h-64 bg-luxury-gold opacity-5 rounded-full filter blur-3xl transform -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-luxury-green opacity-5 rounded-full filter blur-3xl transform translate-x-1/2 translate-y-1/2"></div>
+
+    <div class="max-w-lg w-full mx-4 relative z-10">
+        <div class="bg-white rounded-2xl shadow-2xl p-10 text-center border border-luxury-gold/20 animate-slide-up">
+            
+            <!-- Icon -->
+            <div class="w-20 h-20 bg-luxury-green rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <i class="fas fa-check text-3xl text-luxury-gold"></i>
+            </div>
+
+            <!-- Heading -->
+            <h1 class="text-4xl font-serif font-bold text-luxury-charcoal mb-4">Thank You!</h1>
+            
+            <!-- Message -->
+            <div class="w-16 h-1 bg-luxury-gold mx-auto mb-6"></div>
+            <p class="text-gray-600 text-lg mb-8 leading-relaxed">
+                We have received your enquiry. One of our property consultants will get in touch with you shortly to assist you further.
+            </p>
+
+            <!-- Action Buttons -->
+            <div class="space-y-4">
+                <a href="{% url 'home' %}" class="block w-full bg-luxury-gold text-luxury-green font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition duration-300">
+                    Return to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

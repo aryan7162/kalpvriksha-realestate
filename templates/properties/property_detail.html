@@ -1,0 +1,404 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ property.title }} | Kalpvriksh Real Estate{% endblock %}
+
+{% block content %}
+<!-- Property Header / Hero -->
+<div class="relative h-[60vh] min-h-[400px]">
+    {% if property.main_image %}
+    <img src="{{ property.main_image.url }}" alt="{{ property.title }}" class="w-full h-full object-cover">
+    {% else %}
+    <div class="w-full h-full bg-luxury-charcoal flex items-center justify-center">
+        <i class="fas fa-image text-6xl text-luxury-gold opacity-50"></i>
+    </div>
+    {% endif %}
+    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30"></div>
+    
+    <div class="absolute bottom-0 left-0 w-full p-6 md:p-12">
+        <div class="container mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end gap-6">
+                <div class="animate-slide-up">
+                    <span class="bg-luxury-gold text-luxury-green px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-sm mb-2 inline-block">
+                        {{ property.get_property_type_display }}
+                    </span>
+                    <h1 class="text-3xl md:text-5xl font-serif font-bold text-white mb-2">{{ property.title }}</h1>
+                    <p class="text-gray-300 text-lg"><i class="fas fa-map-marker-alt text-luxury-gold mr-2"></i>{{ property.locality }}, {{ property.city }}</p>
+                </div>
+                <div class="animate-slide-up">
+                    <p class="text-luxury-gold text-3xl md:text-4xl font-bold">₹{{ property.price|intcomma }}</p>
+                    {% if property.price_per_sqft %}
+                    <p class="text-gray-400 text-sm text-right">₹{{ property.price_per_sqft|intcomma }} / sq.ft</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<section class="py-12 bg-luxury-ivory">
+    <div class="container mx-auto px-6">
+
+        <!-- Project Details Grid -->
+        <div class="bg-white rounded-xl p-6 md:p-8 shadow-md border border-gray-100 mb-10">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 text-center">
+                
+                <div>
+                    <p class="text-sm text-gray-500 uppercase tracking-wide">Price</p>
+                    <p class="font-bold text-luxury-charcoal text-lg">{{ property.price_range_text|default:"On Request" }}</p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-gray-500 uppercase tracking-wide">Project Status</p>
+                    <p class="font-bold text-luxury-charcoal text-lg">{{ property.get_status_display }}</p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-gray-500 uppercase tracking-wide">Possession Starts</p>
+                    <p class="font-bold text-luxury-charcoal text-lg">{{ property.possession_date|date:"M Y"|default:"-" }}</p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-gray-500 uppercase tracking-wide">Unit Config</p>
+                    <p class="font-bold text-luxury-charcoal text-lg">{{ property.unit_config_text|default:"-" }}</p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-gray-500 uppercase tracking-wide">Size</p>
+                    <p class="font-bold text-luxury-charcoal text-lg">{{ property.size_range_text|default:"-" }}</p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-gray-500 uppercase tracking-wide">Number of Units</p>
+                    <p class="font-bold text-luxury-charcoal text-lg">{{ property.total_units|default:"-" }}</p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-gray-500 uppercase tracking-wide">Total Area</p>
+                    <p class="font-bold text-luxury-charcoal text-lg">{% if property.project_area_acres %}{{ property.project_area_acres }} Acres{% else %}-{% endif %}</p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-gray-500 uppercase tracking-wide">RERA</p>
+                    <p class="font-bold text-luxury-charcoal text-lg">{{ property.rera_number|default:"Available" }}</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Sticky Nav Bar (Square Yards Style) -->
+        <div class="sticky top-24 bg-white shadow-sm z-30 mb-10 overflow-x-auto border-y border-gray-100 no-scrollbar">
+            <div class="flex items-center p-3 space-x-6 min-w-max px-6">
+                <a href="#about" class="text-gray-600 hover:text-luxury-gold font-medium text-sm uppercase tracking-wide whitespace-nowrap">About</a>
+                <a href="#price-list" class="text-gray-600 hover:text-luxury-gold font-medium text-sm uppercase tracking-wide whitespace-nowrap">Configurations</a>
+                <a href="#price-list" class="text-gray-600 hover:text-luxury-gold font-medium text-sm uppercase tracking-wide whitespace-nowrap">Price List</a>
+                <a href="#amenities" class="text-gray-600 hover:text-luxury-gold font-medium text-sm uppercase tracking-wide whitespace-nowrap">Amenities</a>
+                <a href="#gallery" class="text-gray-600 hover:text-luxury-gold font-medium text-sm uppercase tracking-wide whitespace-nowrap">Gallery</a>
+                <a href="#location" class="text-gray-600 hover:text-luxury-gold font-medium text-sm uppercase tracking-wide whitespace-nowrap">Location</a>
+                <a href="#builder" class="text-gray-600 hover:text-luxury-gold font-medium text-sm uppercase tracking-wide whitespace-nowrap">About Builder</a>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-12">
+            
+            <!-- Left Column: Details -->
+            <div class="lg:col-span-2 space-y-10">
+                
+                <!-- Key Features -->
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex flex-wrap justify-between gap-6 text-center">
+                    <div class="flex-1 min-w-[100px]">
+                        <i class="fas fa-bed text-2xl text-luxury-gold mb-2"></i>
+                        <p class="text-gray-500 text-sm uppercase tracking-wide">Bedrooms</p>
+                        <p class="font-bold text-luxury-charcoal">{{ property.bedrooms|default:"-" }}</p>
+                    </div>
+                    <div class="flex-1 min-w-[100px]">
+                        <i class="fas fa-bath text-2xl text-luxury-gold mb-2"></i>
+                        <p class="text-gray-500 text-sm uppercase tracking-wide">Bathrooms</p>
+                        <p class="font-bold text-luxury-charcoal">{{ property.bathrooms|default:"-" }}</p>
+                    </div>
+                    <div class="flex-1 min-w-[100px]">
+                        <i class="fas fa-ruler-combined text-2xl text-luxury-gold mb-2"></i>
+                        <p class="text-gray-500 text-sm uppercase tracking-wide">Area</p>
+                        <p class="font-bold text-luxury-charcoal">{{ property.area_sqft }} sq.ft</p>
+                    </div>
+                    <div class="flex-1 min-w-[100px]">
+                        <i class="fas fa-layer-group text-2xl text-luxury-gold mb-2"></i>
+                        <p class="text-gray-500 text-sm uppercase tracking-wide">Floor</p>
+                        <p class="font-bold text-luxury-charcoal">{{ property.floor_no|default:"G" }}</p>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div id="about" class="bg-white rounded-xl p-8 shadow-sm border border-gray-100 scroll-mt-32">
+                    <h3 class="text-2xl font-serif font-bold text-luxury-charcoal mb-6">About This Property</h3>
+                    <div class="prose max-w-none text-gray-600 leading-relaxed">
+                        {{ property.description|linebreaks }}
+                    </div>
+                </div>
+
+                <!-- Configurations / Price List Table -->
+                <div id="price-list" class="bg-white rounded-xl p-8 shadow-sm border border-gray-100 scroll-mt-32">
+                    <h3 class="text-2xl font-serif font-bold text-luxury-charcoal mb-6">Configuration & Price</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50 border-b border-gray-200">
+                                    <th class="p-4 font-semibold text-gray-700">Configuration</th>
+                                    <th class="p-4 font-semibold text-gray-700">Area (Sq.ft)</th>
+                                    <th class="p-4 font-semibold text-gray-700">Price</th>
+                                    <th class="p-4 font-semibold text-gray-700"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="p-4 text-gray-800 font-medium">{{ property.unit_config_text|default:"Standard Unit" }}</td>
+                                    <td class="p-4 text-gray-600">{{ property.area_sqft }} sq.ft</td>
+                                    <td class="p-4 font-bold text-luxury-charcoal">₹{{ property.price|intcomma }}</td>
+                                    <td class="p-4 text-right">
+                                        <button onclick="document.querySelector('input[name=first_name]').focus()" class="px-5 py-2 bg-luxury-gold text-luxury-green text-sm font-bold rounded-lg hover:bg-opacity-90 transition shadow-sm">
+                                            Enquire
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Amenities -->
+                <div id="amenities" class="bg-white rounded-xl p-8 shadow-sm border border-gray-100 scroll-mt-32">
+                    <h3 class="text-2xl font-serif font-bold text-luxury-charcoal mb-6">Amenities</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {% for amenity in property.amenities.all %}
+                        <div class="flex items-center space-x-3 text-gray-700">
+                            <i class="{{ amenity.icon|default:'fas fa-check-circle' }} text-luxury-gold"></i>
+                            <span>{{ amenity.name }}</span>
+                        </div>
+                        {% empty %}
+                        <p class="text-gray-500 italic">No specific amenities listed.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Gallery Grid -->
+                {% if property.gallery.exists %}
+                <div id="gallery" class="bg-white rounded-xl p-8 shadow-sm border border-gray-100 scroll-mt-32">
+                    <h3 class="text-2xl font-serif font-bold text-luxury-charcoal mb-6">Gallery</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {% for img in property.gallery.all %}
+                        <a href="{{ img.image.url }}" target="_blank" class="block aspect-square overflow-hidden rounded-lg group">
+                            <img src="{{ img.image.url }}" alt="{{ img.alt_text }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Floor Plan -->
+                {% if property.floor_plan %}
+                <div id="floorplan" class="bg-white rounded-xl p-8 shadow-sm border border-gray-100 scroll-mt-32">
+                    <h3 class="text-2xl font-serif font-bold text-luxury-charcoal mb-6">Floor Plan</h3>
+                    <a href="{{ property.floor_plan.url }}" target="_blank">
+                        <img src="{{ property.floor_plan.url }}" alt="Floor Plan for {{ property.title }}" class="w-full h-auto object-contain rounded-lg border hover:shadow-lg transition">
+                    </a>
+                </div>
+                {% endif %}
+
+                <!-- Location / Map -->
+                <div id="location" class="bg-white rounded-xl p-8 shadow-sm border border-gray-100 scroll-mt-32">
+                    <h3 class="text-2xl font-serif font-bold text-luxury-charcoal mb-6">Location</h3>
+                    <p class="text-gray-600 mb-4">{{ property.address }}</p>
+                    <div class="aspect-w-16 aspect-h-9 bg-gray-200 rounded-lg flex items-center justify-center">
+                        <p class="text-gray-500">Map Placeholder</p>
+                    </div>
+                </div>
+
+                <!-- About Builder -->
+                {% if property.builder_name %}
+                <div id="builder" class="bg-white rounded-xl p-8 shadow-sm border border-gray-100 scroll-mt-32">
+                    <h3 class="text-2xl font-serif font-bold text-luxury-charcoal mb-6">About the Builder</h3>
+                    <div class="flex items-center gap-6">
+                        {% if property.builder_logo %}
+                        <img src="{{ property.builder_logo.url }}" alt="{{ property.builder_name }} logo" class="w-24 h-24 object-contain flex-shrink-0">
+                        {% endif %}
+                        <div>
+                            <h4 class="text-xl font-bold text-luxury-charcoal">{{ property.builder_name }}</h4>
+                            <p class="text-gray-600 mt-2">Information about the builder can be added here. This could be a new field in the Property model or fetched from a separate Builder model.</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+
+            <!-- Right Column: Enquiry Form -->
+            <div class="lg:col-span-1">
+                <div class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto pr-2 pb-6">
+                    <!-- Sticky Note: Act Fast -->
+                    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r shadow-sm">
+                        <div class="flex items-start">
+                            <div class="bg-white p-2 rounded-full shadow-sm mr-3 flex-shrink-0">
+                                <i class="fas fa-hourglass-half text-red-500 text-lg animate-pulse"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-red-800 text-sm uppercase tracking-wider mb-1">Your Dream Home Won’t Wait</h4>
+                                <p class="text-red-600 text-xs font-bold">Act Fast! Units selling quickly.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-xl border border-luxury-gold/20 overflow-hidden">
+                        <div class="bg-luxury-charcoal p-4 text-center">
+                            <h3 class="text-xl font-serif text-white">Interested in this property?</h3>
+                            <p class="text-luxury-gold text-sm">Fill the details below</p>
+                        </div>
+                        <div class="p-6">
+                            <form action="{% url 'lead_capture' %}" method="POST" class="space-y-4">
+                                {% csrf_token %}
+                                <input type="hidden" name="property" value="{{ property.id }}">
+                                
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Full Name *</label>
+                                    <div class="relative">
+                                        <i class="fas fa-user absolute left-3 top-3 text-gray-400"></i>
+                                        <input type="text" name="first_name" required placeholder="Enter your name" 
+                                               class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-luxury-gold focus:border-luxury-gold outline-none transition">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Phone Number *</label>
+                                    <div class="relative">
+                                        <i class="fas fa-phone absolute left-3 top-3 text-gray-400"></i>
+                                        <input type="tel" name="phone" required placeholder="+91 98765 43210" 
+                                               class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-luxury-gold focus:border-luxury-gold outline-none transition">
+                                    </div>
+                                </div>
+
+                                <!-- Configuration Field -->
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Configuration *</label>
+                                    <div class="relative">
+                                        <i class="fas fa-home absolute left-3 top-3 text-gray-400"></i>
+                                        <select name="configuration" required class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-luxury-gold focus:border-luxury-gold outline-none transition bg-white appearance-none">
+                                            <option value="" disabled selected>Select Configuration</option>
+                                            <option value="1 BHK">1 BHK</option>
+                                            <option value="2 BHK">2 BHK</option>
+                                            <option value="3 BHK">3 BHK</option>
+                                            <option value="4 BHK">4 BHK</option>
+                                            <option value="Villa">Villa</option>
+                                            <option value="Penthouse">Penthouse</option>
+                                            <option value="Commercial Shop">Commercial Shop</option>
+                                            <option value="Office Space">Office Space</option>
+                                        </select>
+                                        <i class="fas fa-chevron-down absolute right-3 top-3 text-gray-400 pointer-events-none text-xs"></i>
+                                    </div>
+                                </div>
+
+                                <!-- Hidden or Optional Email -->
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Email *</label>
+                                    <div class="relative">
+                                        <i class="fas fa-envelope absolute left-3 top-3 text-gray-400"></i>
+                                        <input type="email" name="email" required placeholder="your@email.com" 
+                                               class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-luxury-gold focus:border-luxury-gold outline-none transition">
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="w-full bg-luxury-gold text-luxury-green py-3 rounded-lg font-bold hover:bg-opacity-90 hover:shadow-lg transition duration-300">
+                                    Submit Enquiry
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Why Invest Section -->
+                    <div class="bg-white rounded-xl shadow-md border border-gray-100 p-6 mt-6">
+                        <h3 class="font-serif font-bold text-luxury-charcoal text-lg mb-4 pb-2 border-b border-gray-100">Why Invest through Kalpvriksha?</h3>
+                        <div class="space-y-4">
+                            
+                            <div class="flex gap-3">
+                                <i class="fas fa-user-tie text-luxury-gold mt-1 flex-shrink-0"></i>
+                                <p class="text-sm text-gray-700">Dedicated Relationship Manager for Lifetime</p>
+                            </div>
+                            <div class="flex gap-3">
+                                <i class="fas fa-gavel text-luxury-gold mt-1 flex-shrink-0"></i>
+                                <p class="text-sm text-gray-700">Legal Protection & Litigation Support</p>
+                            </div>
+                            <div class="flex gap-3">
+                                <i class="fas fa-file-invoice-dollar text-luxury-gold mt-1 flex-shrink-0"></i>
+                                <p class="text-sm text-gray-700">Taxation & Compliance</p>
+                            </div>
+                            <div class="flex gap-3">
+                                <i class="fas fa-hard-hat text-luxury-gold mt-1 flex-shrink-0"></i>
+                                <p class="text-sm text-gray-700">Construction & Pricing Updates</p>
+                            </div>
+                            
+                            <div class="pt-2 border-t border-gray-100"></div>
+
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <i class="fas fa-percentage text-luxury-gold flex-shrink-0"></i>
+                                    <h5 class="font-bold text-sm text-luxury-charcoal">Zero Brokerage</h5>
+                                </div>
+                                <p class="text-xs text-gray-500 pl-6">100% Service, 0% Brokerage.</p>
+                            </div>
+
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <i class="fas fa-tag text-luxury-gold flex-shrink-0"></i>
+                                    <h5 class="font-bold text-sm text-luxury-charcoal">Lowest Price Guaranteed</h5>
+                                </div>
+                                <p class="text-xs text-gray-500 pl-6">Highly unlikely, but if you find a lower price anywhere, tell us and we will match it.</p>
+                            </div>
+
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <i class="fas fa-hands-helping text-luxury-gold flex-shrink-0"></i>
+                                    <h5 class="font-bold text-sm text-luxury-charcoal">Full Service Support</h5>
+                                </div>
+                                <p class="text-xs text-gray-500 pl-6">Our sales personnel are accountable for every step.</p>
+                            </div>
+
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <i class="fas fa-rupee-sign text-luxury-gold flex-shrink-0"></i>
+                                    <h5 class="font-bold text-sm text-luxury-charcoal">Home Finance & Downpayment</h5>
+                                </div>
+                                <p class="text-xs text-gray-500 pl-6">Maximum loan approval with the best interest rates.</p>
+                            </div>
+
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <i class="fas fa-couch text-luxury-gold flex-shrink-0"></i>
+                                    <h5 class="font-bold text-sm text-luxury-charcoal">Interior Design & Home Renovation</h5>
+                                </div>
+                                <p class="text-xs text-gray-500 pl-6">From completed homes to modular furniture, our top interior designers match your vision.</p>
+                            </div>
+
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <i class="fas fa-key text-luxury-gold flex-shrink-0"></i>
+                                    <h5 class="font-bold text-sm text-luxury-charcoal">Rental & Property Management</h5>
+                                </div>
+                                <p class="text-xs text-gray-500 pl-6">We handle everything from tenant finding to rent collection.</p>
+                            </div>
+
+                             <div class="flex gap-3">
+                                <i class="fas fa-chart-line text-luxury-gold mt-1 flex-shrink-0"></i>
+                                <p class="text-sm text-gray-700">RE Portfolio Tracking</p>
+                            </div>
+                            <div class="flex gap-3">
+                                <i class="fas fa-exchange-alt text-luxury-gold mt-1 flex-shrink-0"></i>
+                                <p class="text-sm text-gray-700">Resale & Rental Assistance</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

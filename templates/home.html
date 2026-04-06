@@ -1,0 +1,557 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    @keyframes scroll {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+    .builder-slider {
+        display: flex;
+        width: fit-content;
+        animation: scroll 30s linear infinite;
+    }
+    .builder-slider:hover {
+        animation-play-state: paused;
+    }
+    .search-input-wrapper:focus-within {
+        transform: scale(1.02);
+        box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+    }
+</style>
+
+<!-- Hero Section with Parallax -->
+<section class="relative h-screen overflow-hidden">
+    <div class="absolute inset-0 parallax" style="background-image: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3'); background-position: center 30%;"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-luxury-green/90"></div>
+    
+    <div class="relative h-full flex items-center">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl animate-fade-in">
+                <div class="mb-6">
+                    <span class="text-luxury-gold text-sm tracking-wider uppercase">Welcome to Excellence</span>
+                    <div class="w-20 h-px bg-luxury-gold mt-3"></div>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-serif font-bold text-white mb-6 leading-tight">
+                    Where Dreams<br>
+                    <span class="gradient-text">Take Root</span>
+                </h1>
+                <p class="text-xl text-gray-200 mb-8 max-w-2xl leading-relaxed">
+                    Discover unparalleled luxury living across Pune, Mumbai, Bangalore, Gurugram, Noida, Delhi, and Lucknow. 
+                    Experience world-class amenities and homes that redefine elegance.
+                </p>
+                
+                <!-- Animated Search Bar -->
+                <form action="{% url 'property_list' %}" method="get" class="mb-10 max-w-3xl relative z-20">
+                    <div class="search-input-wrapper relative flex flex-col md:flex-row items-center bg-white/10 backdrop-blur-md border border-white/30 rounded-2xl md:rounded-full p-2 transition-all duration-300">
+                        <div class="w-full md:w-1/3 relative border-b md:border-b-0 md:border-r border-white/20 px-4 py-2">
+                            <i class="fas fa-map-marker-alt text-luxury-gold absolute left-4 top-1/2 transform -translate-y-1/2"></i>
+                            <select name="city" id="city-select" class="w-full bg-transparent text-white placeholder-gray-300 focus:outline-none appearance-none pl-8 py-2 cursor-pointer">
+                                <option value="" class="text-gray-800">All Cities</option>
+                                <option value="Pune" class="text-gray-800">Pune</option>
+                                <option value="Mumbai" class="text-gray-800">Mumbai</option>
+                                <option value="Bangalore" class="text-gray-800">Bangalore</option>
+                                <option value="Gurugram" class="text-gray-800">Gurugram</option>
+                                <option value="Noida" class="text-gray-800">Noida</option>
+                                <option value="Delhi" class="text-gray-800">Delhi</option>
+                                <option value="Lucknow" class="text-gray-800">Lucknow</option>
+                            </select>
+                            <i class="fas fa-chevron-down text-white text-xs absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none"></i>
+                        </div>
+                        <div class="w-full md:w-1/4 relative border-b md:border-b-0 md:border-r border-white/20 px-4 py-2">
+                            <i class="fas fa-thumbtack text-luxury-gold absolute left-4 top-1/2 transform -translate-y-1/2"></i>
+                            <select name="locality" id="locality-select" class="w-full bg-transparent text-white placeholder-gray-300 focus:outline-none pl-8 py-2 appearance-none cursor-pointer">
+                                <option value="" class="text-gray-800">Sub-location</option>
+                            </select>
+                            <i class="fas fa-chevron-down text-white text-xs absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none"></i>
+                        </div>
+                        <div class="w-full md:w-auto flex-1 flex items-center px-4 py-2">
+                            <i class="fas fa-search text-luxury-gold text-xl mr-3"></i>
+                            <input type="text" name="q" placeholder="Search by project or landmark..." class="w-full bg-transparent text-white placeholder-gray-300 focus:outline-none text-lg">
+                        </div>
+                        <button type="submit" class="w-full md:w-auto bg-luxury-gold hover:bg-white hover:text-luxury-green text-luxury-green font-bold py-3 px-8 rounded-xl md:rounded-full transition duration-300 shadow-lg">
+                            Search
+                        </button>
+                    </div>
+                </form>
+
+                <div class="flex flex-wrap gap-4">
+                    <a href="{% url 'property_list' %}" class="group bg-luxury-gold text-luxury-green px-8 py-4 rounded-full font-semibold hover:bg-opacity-90 transition duration-300 flex items-center space-x-2">
+                        <span>Explore Properties</span>
+                        <i class="fas fa-arrow-right group-hover:translate-x-1 transition"></i>
+                    </a>
+                    <a href="#contact" class="border-2 border-luxury-gold text-white px-8 py-4 rounded-full font-semibold hover:bg-luxury-gold hover:text-luxury-green transition duration-300">
+                        Schedule a Visit
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <a href="#featured" class="text-white text-2xl">
+            <i class="fas fa-chevron-down"></i>
+        </a>
+    </div>
+</section>
+
+<!-- Partnered Builders Slider -->
+<section class="py-12 bg-white border-b border-gray-100 overflow-hidden">
+    <div class="container mx-auto px-6 mb-8 text-center">
+        <span class="text-luxury-gold text-sm tracking-wider uppercase">Our Trusted Partners</span>
+    </div>
+    <div class="relative w-full overflow-hidden">
+        <div class="builder-slider flex items-center">
+            <!-- First Set -->
+            <div class="w-64 flex-shrink-0 px-8 flex justify-center items-center opacity-60 hover:opacity-100 transition duration-300 grayscale hover:grayscale-0">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTe7serAvBNfm2gh4I-_kX2ojncM43YCgH2yQ&s" alt="Partner 1" class="h-20 w-auto object-contain">
+            </div>
+            <div class="w-64 flex-shrink-0 px-8 flex justify-center items-center opacity-60 hover:opacity-100 transition duration-300 grayscale hover:grayscale-0">
+                <img src="https://saheelproperties.co.in/wp-content/uploads/2025/06/Saheel-Stacked-Logo-Main-scaled.webp" alt="Saheel Properties" class="h-20 w-auto object-contain">
+            </div>
+            <div class="w-64 flex-shrink-0 px-8 flex justify-center items-center opacity-60 hover:opacity-100 transition duration-300 grayscale hover:grayscale-0">
+                <img src="https://csrbox.org/news/1635413342untitled-design-8.png.png" alt="Partner 3" class="h-20 w-auto object-contain">
+            </div>
+            <div class="w-64 flex-shrink-0 px-8 flex justify-center items-center opacity-60 hover:opacity-100 transition duration-300 grayscale hover:grayscale-0">
+                <img src="https://housiey.com/blogs/wp-content/uploads/2024/11/WhatsApp-Image-2024-12-14-at-16.19.42.jpeg" alt="Partner 4" class="h-20 w-auto object-contain">
+            </div>
+            <div class="w-64 flex-shrink-0 px-8 flex justify-center items-center opacity-60 hover:opacity-100 transition duration-300 grayscale hover:grayscale-0">
+                <img src="https://images.seeklogo.com/logo-png/6/2/godrej-logo-png_seeklogo-61758.png" alt="Godrej" class="h-20 w-auto object-contain">
+            </div>
+            <div class="w-64 flex-shrink-0 px-8 flex justify-center items-center opacity-60 hover:opacity-100 transition duration-300 grayscale hover:grayscale-0">
+                <img src="https://www.itln.in/itlnbackend/assets/uploads/hiranandani.jpg" alt="Hiranandani" class="h-20 w-auto object-contain">
+            </div>
+            <div class="w-64 flex-shrink-0 px-8 flex justify-center items-center opacity-60 hover:opacity-100 transition duration-300 grayscale hover:grayscale-0">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt-V2nq091VTcZ48xAwXhq68F4qK_GMl9u-A&s" alt="Partner Logo" class="h-20 w-auto object-contain">
+            </div>
+            <div class="w-64 flex-shrink-0 px-8 flex justify-center items-center opacity-60 hover:opacity-100 transition duration-300 grayscale hover:grayscale-0">
+                <img src="data:image/png;base64,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" alt="Partner Logo" class="h-20 w-auto object-contain">
+            </div>
+
+            <!-- Duplicate Set for Infinite Scroll -->
+            <div class="w-64 flex-shrink-0 px-8 flex justify-center items-center opacity-60 hover:opacity-100 transition duration-300 grayscale hover:grayscale-0">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTe7serAvBNfm2gh4I-_kX2ojncM43YCgH2yQ&s" alt="Partner 1" class="h-20 w-auto object-contain">
+            </div>
+            <div class="w-64 flex-shrink-0 px-8 flex justify-center items-center opacity-60 hover:opacity-100 transition duration-300 grayscale hover:grayscale-0">
+                <img src="https://saheelproperties.co.in/wp-content/uploads/2025/06/Saheel-Stacked-Logo-Main-scaled.webp" alt="Saheel Properties" class="h-20 w-auto object-contain">
+            </div>
+            <div class="w-64 flex-shrink-0 px-8 flex justify-center items-center opacity-60 hover:opacity-100 transition duration-300 grayscale hover:grayscale-0">
+                <img src="https://csrbox.org/news/1635413342untitled-design-8.png.png" alt="Partner 3" class="h-20 w-auto object-contain">
+            </div>
+            <div class="w-64 flex-shrink-0 px-8 flex justify-center items-center opacity-60 hover:opacity-100 transition duration-300 grayscale hover:grayscale-0">
+                <img src="https://housiey.com/blogs/wp-content/uploads/2024/11/WhatsApp-Image-2024-12-14-at-16.19.42.jpeg" alt="Partner 4" class="h-20 w-auto object-contain">
+            </div>
+            <div class="w-64 flex-shrink-0 px-8 flex justify-center items-center opacity-60 hover:opacity-100 transition duration-300 grayscale hover:grayscale-0">
+                <img src="https://images.seeklogo.com/logo-png/6/2/godrej-logo-png_seeklogo-61758.png" alt="Godrej" class="h-20 w-auto object-contain">
+            </div>
+            <div class="w-64 flex-shrink-0 px-8 flex justify-center items-center opacity-60 hover:opacity-100 transition duration-300 grayscale hover:grayscale-0">
+                <img src="https://www.itln.in/itlnbackend/assets/uploads/hiranandani.jpg" alt="Hiranandani" class="h-20 w-auto object-contain">
+            </div>
+            <div class="w-64 flex-shrink-0 px-8 flex justify-center items-center opacity-60 hover:opacity-100 transition duration-300 grayscale hover:grayscale-0">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt-V2nq091VTcZ48xAwXhq68F4qK_GMl9u-A&s" alt="Partner Logo" class="h-20 w-auto object-contain">
+            </div>
+            <div class="w-64 flex-shrink-0 px-8 flex justify-center items-center opacity-60 hover:opacity-100 transition duration-300 grayscale hover:grayscale-0">
+                <img src="data:image/png;base64,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" alt="Partner Logo" class="h-20 w-auto object-contain">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Cities -->
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-16 animate-on-scroll">
+            <span class="text-luxury-gold text-sm tracking-wider uppercase">Locations</span>
+            <h2 class="text-4xl md:text-5xl font-serif font-bold text-luxury-charcoal mt-2 mb-4">Featured Cities</h2>
+            <div class="w-24 h-px bg-luxury-gold mx-auto"></div>
+            <p class="text-gray-600 mt-6 max-w-2xl mx-auto">Explore premium properties in India's most vibrant metropolitan hubs.</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- Pune -->
+            <a href="{% url 'property_list' %}?city=Pune" class="group relative rounded-2xl overflow-hidden h-96 cursor-pointer shadow-lg animate-on-scroll hover-lift">
+                <img src="https://images.unsplash.com/photo-1572508589584-94d77ad200ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Pune" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
+                <div class="absolute bottom-8 left-8">
+                    <h3 class="text-3xl font-serif font-bold text-white mb-2">Pune</h3>
+                    <p class="text-luxury-gold font-medium group-hover:text-white transition">View Properties <i class="fas fa-arrow-right ml-2 text-sm"></i></p>
+                </div>
+            </a>
+            
+            <!-- Mumbai -->
+            <a href="{% url 'property_list' %}?city=Mumbai" class="group relative rounded-2xl overflow-hidden h-96 cursor-pointer shadow-lg animate-on-scroll hover-lift">
+                <img src="https://images.unsplash.com/photo-1566552881560-0be862a7c445?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Mumbai" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
+                <div class="absolute bottom-8 left-8">
+                    <h3 class="text-3xl font-serif font-bold text-white mb-2">Mumbai</h3>
+                    <p class="text-luxury-gold font-medium group-hover:text-white transition">View Properties <i class="fas fa-arrow-right ml-2 text-sm"></i></p>
+                </div>
+            </a>
+            
+            <!-- Bangalore -->
+            <a href="{% url 'property_list' %}?city=Bangalore" class="group relative rounded-2xl overflow-hidden h-96 cursor-pointer shadow-lg animate-on-scroll hover-lift">
+                <img src="https://images.unsplash.com/photo-1596176530529-78163a4f7af2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Bangalore" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
+                <div class="absolute bottom-8 left-8">
+                    <h3 class="text-3xl font-serif font-bold text-white mb-2">Bangalore</h3>
+                    <p class="text-luxury-gold font-medium group-hover:text-white transition">View Properties <i class="fas fa-arrow-right ml-2 text-sm"></i></p>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Properties -->
+<section id="featured" class="py-24 bg-luxury-ivory">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-16 animate-on-scroll">
+            <span class="text-luxury-gold text-sm tracking-wider uppercase">Curated Collection</span>
+            <h2 class="text-4xl md:text-5xl font-serif font-bold text-luxury-charcoal mt-2 mb-4">Featured Properties</h2>
+            <div class="w-24 h-px bg-luxury-gold mx-auto"></div>
+            <p class="text-gray-600 mt-6 max-w-2xl mx-auto">Discover our handpicked selection of premium properties that exemplify luxury living at its finest.</p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for property in featured_properties %}
+            <div class="group relative bg-white rounded-2xl overflow-hidden shadow-lg hover-lift animate-on-scroll">
+                <div class="relative overflow-hidden h-80">
+                    {% if property.main_image %}
+                    <img src="{{ property.main_image.url }}" alt="{{ property.title }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                    {% else %}
+                    <div class="w-full h-full bg-gradient-to-br from-luxury-green to-luxury-charcoal flex items-center justify-center">
+                        <i class="fas fa-home text-6xl text-luxury-gold"></i>
+                    </div>
+                    {% endif %}
+                    <div class="absolute top-4 right-4 bg-luxury-gold text-luxury-green px-3 py-1 rounded-full text-sm font-semibold">
+                        Featured
+                    </div>
+                    <div class="absolute top-4 left-4 bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full text-white text-sm">
+                        <i class="fas fa-tag mr-1"></i> For Sale
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h3 class="text-xl font-bold text-luxury-charcoal mb-1">{{ property.title }}</h3>
+                            <p class="text-gray-500 text-sm">
+                                <i class="fas fa-map-marker-alt text-luxury-gold mr-1"></i> {{ property.locality }}, {{ property.city }}
+                            </p>
+                        </div>
+                        <span class="text-luxury-gold font-bold text-xl">₹{{ property.price|floatformat:0 }}</span>
+                    </div>
+                    
+                    <div class="flex justify-between border-t border-b py-4 my-4">
+                        <div class="text-center">
+                            <i class="fas fa-bed text-luxury-gold text-xl"></i>
+                            <p class="text-sm text-gray-600 mt-1">{{ property.bedrooms|default:"-" }} Beds</p>
+                        </div>
+                        <div class="text-center">
+                            <i class="fas fa-bath text-luxury-gold text-xl"></i>
+                            <p class="text-sm text-gray-600 mt-1">{{ property.bathrooms|default:"-" }} Baths</p>
+                        </div>
+                        <div class="text-center">
+                            <i class="fas fa-chart-area text-luxury-gold text-xl"></i>
+                            <p class="text-sm text-gray-600 mt-1">{{ property.area_sqft|floatformat:0 }} sq.ft</p>
+                        </div>
+                    </div>
+                    
+                    <a href="{% url 'property_detail' property.slug %}" class="block text-center bg-luxury-green text-white py-3 rounded-lg font-semibold hover:bg-luxury-gold hover:text-luxury-green transition duration-300">
+                        View Details
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center col-span-3 text-gray-500">No properties available yet. Add some in the admin panel.</p>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-12">
+            <a href="{% url 'property_list' %}" class="inline-flex items-center space-x-2 text-luxury-gold hover:text-luxury-bronze transition font-semibold">
+                <span>View All Properties</span>
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Luxury Lifestyle Section -->
+<section class="py-24 bg-luxury-charcoal text-white relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+        <svg class="w-full h-full" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="grid" patternUnits="userSpaceOnUse" width="50" height="50">
+                    <path d="M 50 0 L 0 0 0 50" fill="none" stroke="white" stroke-width="1"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)"/>
+        </svg>
+    </div>
+    
+    <div class="container mx-auto px-6 relative">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div class="animate-on-scroll">
+                <span class="text-luxury-gold text-sm tracking-wider uppercase">The Kalpvriksh Experience</span>
+                <h2 class="text-4xl md:text-5xl font-serif font-bold mt-4 mb-6">Beyond Extraordinary Living</h2>
+                <div class="w-20 h-px bg-luxury-gold mb-6"></div>
+                <p class="text-gray-300 leading-relaxed mb-8">
+                    At Kalpvriksh, we believe that a home is more than just a space—it's a reflection of your aspirations. 
+                    Each property is meticulously crafted to offer the perfect blend of luxury, comfort, and sophistication.
+                </p>
+                
+                <div class="space-y-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-luxury-gold rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-check text-luxury-charcoal"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-xl mb-2">Prime Locations</h4>
+                            <p class="text-gray-400">Strategically located in Pune's most coveted neighborhoods</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-luxury-gold rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-check text-luxury-charcoal"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-xl mb-2">World-Class Amenities</h4>
+                            <p class="text-gray-400">Clubhouses, pools, gyms, and more for the ultimate lifestyle</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-luxury-gold rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-check text-luxury-charcoal"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-xl mb-2">Premium Construction</h4>
+                            <p class="text-gray-400">Uncompromising quality with attention to every detail</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 animate-on-scroll">
+                <div class="space-y-4">
+                    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3" alt="Luxury Living" class="rounded-2xl shadow-2xl hover-lift w-full h-64 object-cover">
+                    <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3" alt="Modern Architecture" class="rounded-2xl shadow-2xl hover-lift w-full h-48 object-cover">
+                </div>
+                <div class="mt-8 space-y-4">
+                    <img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?ixlib=rb-4.0.3" alt="Interior Design" class="rounded-2xl shadow-2xl hover-lift w-full h-48 object-cover">
+                    <img src="https://images.unsplash.com/photo-1600607687644-c7171b42498f?ixlib=rb-4.0.3" alt="Pool View" class="rounded-2xl shadow-2xl hover-lift w-full h-64 object-cover">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="py-20 bg-luxury-gold">
+    <div class="container mx-auto px-6">
+        <div class="grid md:grid-cols-4 gap-8 text-center">
+            <div class="animate-on-scroll">
+                <div class="text-4xl font-bold text-luxury-charcoal mb-2">500+</div>
+                <p class="text-luxury-charcoal font-semibold">Happy Families</p>
+            </div>
+            <div class="animate-on-scroll">
+                <div class="text-4xl font-bold text-luxury-charcoal mb-2">50+</div>
+                <p class="text-luxury-charcoal font-semibold">Luxury Projects</p>
+            </div>
+            <div class="animate-on-scroll">
+                <div class="text-4xl font-bold text-luxury-charcoal mb-2">1M+</div>
+                <p class="text-luxury-charcoal font-semibold">Sq. Ft. Delivered</p>
+            </div>
+            <div class="animate-on-scroll">
+                <div class="text-4xl font-bold text-luxury-charcoal mb-2">15+</div>
+                <p class="text-luxury-charcoal font-semibold">Years of Excellence</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="py-24 bg-luxury-ivory">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-16 animate-on-scroll">
+            <span class="text-luxury-gold text-sm tracking-wider uppercase">Testimonials</span>
+            <h2 class="text-4xl md:text-5xl font-serif font-bold text-luxury-charcoal mt-2 mb-4">What Our Clients Say</h2>
+            <div class="w-24 h-px bg-luxury-gold mx-auto"></div>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-white rounded-2xl p-8 shadow-lg hover-lift animate-on-scroll">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-luxury-gold rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-luxury-charcoal text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h4 class="font-bold text-luxury-charcoal">Rahul Mehta</h4>
+                        <p class="text-sm text-gray-500">Homeowner, Koregaon Park</p>
+                    </div>
+                </div>
+                <div class="flex mb-4">
+                    <i class="fas fa-star text-luxury-gold"></i>
+                    <i class="fas fa-star text-luxury-gold"></i>
+                    <i class="fas fa-star text-luxury-gold"></i>
+                    <i class="fas fa-star text-luxury-gold"></i>
+                    <i class="fas fa-star text-luxury-gold"></i>
+                </div>
+                <p class="text-gray-600 leading-relaxed">"Exceptional service and beautiful properties. Kalpvriksh made our dream home a reality. The attention to detail is unmatched."</p>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-8 shadow-lg hover-lift animate-on-scroll">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-luxury-gold rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-luxury-charcoal text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h4 class="font-bold text-luxury-charcoal">Tanishka Nagdive</h4>
+                        <p class="text-sm text-gray-500">Investor, Baner</p>
+                    </div>
+                </div>
+                <div class="flex mb-4">
+                    <i class="fas fa-star text-luxury-gold"></i>
+                    <i class="fas fa-star text-luxury-gold"></i>
+                    <i class="fas fa-star text-luxury-gold"></i>
+                    <i class="fas fa-star text-luxury-gold"></i>
+                    <i class="fas fa-star text-luxury-gold"></i>
+                </div>
+                <p class="text-gray-600 leading-relaxed">"Best investment decision I've made. The property value has appreciated significantly, and the amenities are world-class."</p>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-8 shadow-lg hover-lift animate-on-scroll">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-luxury-gold rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-luxury-charcoal text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h4 class="font-bold text-luxury-charcoal">Amit Kumar</h4>
+                        <p class="text-sm text-gray-500">NRI Buyer, Hinjewadi</p>
+                    </div>
+                </div>
+                <div class="flex mb-4">
+                    <i class="fas fa-star text-luxury-gold"></i>
+                    <i class="fas fa-star text-luxury-gold"></i>
+                    <i class="fas fa-star text-luxury-gold"></i>
+                    <i class="fas fa-star text-luxury-gold"></i>
+                    <i class="fas fa-star text-luxury-gold"></i>
+                </div>
+                <p class="text-gray-600 leading-relaxed">"The team at Kalpvriksh went above and beyond to help us find the perfect property remotely. Truly professional!"</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="py-24 bg-luxury-charcoal text-white relative">
+    <div class="absolute inset-0 opacity-5">
+        <div class="absolute top-0 left-0 w-64 h-64 bg-luxury-gold rounded-full filter blur-3xl"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-luxury-gold rounded-full filter blur-3xl"></div>
+    </div>
+    
+    <div class="container mx-auto px-6 relative">
+        <div class="grid lg:grid-cols-2 gap-12">
+            <div class="animate-on-scroll">
+                <span class="text-luxury-gold text-sm tracking-wider uppercase">Get in Touch</span>
+                <h2 class="text-4xl font-serif font-bold mt-4 mb-6">Let's Discuss Your Dream Home</h2>
+                <div class="w-20 h-px bg-luxury-gold mb-6"></div>
+                <p class="text-gray-300 leading-relaxed mb-8">
+                    Whether you're looking to buy, sell, or invest, our expert team is here to guide you through every step of your real estate journey.
+                </p>
+                
+                <div class="space-y-6">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-luxury-gold rounded-full flex items-center justify-center">
+                            <i class="fas fa-map-marker-alt text-luxury-charcoal text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="font-semibold">Visit Our Office</p>
+                            <p class="text-gray-400">Pune, Maharashtra, India</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-luxury-gold rounded-full flex items-center justify-center">
+                            <i class="fas fa-phone-alt text-luxury-charcoal text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="font-semibold">Call Us</p>
+                            <p class="text-gray-400">+91 927 009 6195</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-luxury-gold rounded-full flex items-center justify-center">
+                            <i class="fas fa-envelope text-luxury-charcoal text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="font-semibold">Email Us</p>
+                            <p class="text-gray-400">info@kalpvriksh.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-8 shadow-2xl animate-on-scroll">
+                <h3 class="text-2xl font-bold text-luxury-charcoal mb-6">Send a Message</h3>
+                <form method="POST" action="{% url 'lead_capture' %}">
+                    {% csrf_token %}
+                    <div class="grid md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+                            <input type="text" name="first_name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-luxury-gold focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                            <input type="email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-luxury-gold focus:border-transparent">
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
+                        <input type="tel" name="phone" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-luxury-gold focus:border-transparent">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                        <textarea name="message" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-luxury-gold focus:border-transparent" placeholder="Tell us about your requirements..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-luxury-gold text-luxury-green py-3 rounded-lg font-semibold hover:bg-opacity-90 transition duration-300">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const citySelect = document.getElementById('city-select');
+    const localitySelect = document.getElementById('locality-select');
+
+    if (citySelect && localitySelect) {
+        citySelect.addEventListener('change', function() {
+            const city = this.value;
+            // Reset sub-location dropdown
+            localitySelect.innerHTML = '<option value="" class="text-gray-800">Sub-location</option>';
+            
+            if (!city) return;
+
+            // Fetch sub-locations dynamically
+            fetch(`/properties/api/localities/?city=${city}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.localities && data.localities.length > 0) {
+                        data.localities.forEach(loc => {
+                            const option = document.createElement('option');
+                            option.value = loc;
+                            option.textContent = loc;
+                            option.className = 'text-gray-800';
+                            localitySelect.appendChild(option);
+                        });
+                    }
+                })
+                .catch(error => console.error('Error loading sub-locations:', error));
+        });
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us | Kalpvriksh Real Estate{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative h-[60vh] bg-cover bg-center bg-fixed" style="background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')">
+    <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+    <div class="relative container mx-auto px-6 h-full flex items-center justify-center text-center">
+        <div class="animate-slide-up">
+            <span class="text-luxury-gold text-sm tracking-wider uppercase font-semibold">Our Journey</span>
+            <h1 class="text-4xl md:text-6xl font-serif font-bold text-white mt-4 mb-6">Crafting Legacies,<br>Building Dreams</h1>
+            <div class="w-24 h-1 bg-luxury-gold mx-auto"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Story -->
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-6">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="animate-on-scroll">
+                <h2 class="text-4xl font-serif font-bold text-luxury-charcoal mb-6">A Decade of Excellence</h2>
+                <p class="text-gray-600 leading-relaxed mb-6">
+                    Established in 2010, Kalpvriksh Real Estate has been at the forefront of Pune's luxury real estate market. What began as a boutique agency has grown into a premier property consultancy, trusted by hundreds of families to find their perfect homes.
+                </p>
+                <p class="text-gray-600 leading-relaxed mb-8">
+                    Our name, 'Kalpvriksh', is inspired by the divine wish-fulfilling tree in mythology. True to our name, we strive to fulfill the deepest aspirations of our clients, providing not just houses, but homes where generations can flourish.
+                </p>
+                
+                <div class="grid grid-cols-3 gap-6 text-center border-t border-gray-100 pt-8">
+                    <div>
+                        <span class="block text-3xl font-bold text-luxury-gold">15+</span>
+                        <span class="text-sm text-gray-500 uppercase">Years</span>
+                    </div>
+                    <div>
+                        <span class="block text-3xl font-bold text-luxury-gold">500+</span>
+                        <span class="text-sm text-gray-500 uppercase">Happy Clients</span>
+                    </div>
+                    <div>
+                        <span class="block text-3xl font-bold text-luxury-gold">50+</span>
+                        <span class="text-sm text-gray-500 uppercase">Projects</span>
+                    </div>
+                </div>
+            </div>
+            <div class="relative animate-on-scroll">
+                <div class="absolute -top-4 -left-4 w-full h-full border-2 border-luxury-gold rounded-2xl"></div>
+                <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Our Office" class="relative rounded-2xl shadow-2xl w-full object-cover h-[500px]">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Mission & Vision -->
+<section class="py-20 bg-luxury-ivory">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-16 animate-on-scroll">
+            <span class="text-luxury-gold text-sm tracking-wider uppercase">Our Philosophy</span>
+            <h2 class="text-3xl md:text-4xl font-serif font-bold text-luxury-charcoal mt-2">Driven by Purpose</h2>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="bg-white p-10 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border-t-4 border-luxury-gold animate-on-scroll">
+                <div class="w-16 h-16 bg-luxury-green rounded-full flex items-center justify-center mb-6">
+                    <i class="fas fa-bullseye text-luxury-gold text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-luxury-charcoal mb-4">Our Mission</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    To simplify the real estate journey for our clients by providing transparent, data-driven, and personalized consultancy. We aim to bridge the gap between dreams and reality through integrity and expertise.
+                </p>
+            </div>
+
+            <div class="bg-white p-10 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border-t-4 border-luxury-gold animate-on-scroll">
+                <div class="w-16 h-16 bg-luxury-green rounded-full flex items-center justify-center mb-6">
+                    <i class="fas fa-eye text-luxury-gold text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-luxury-charcoal mb-4">Our Vision</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    To be Pune's most trusted and admired real estate brand, known for setting benchmarks in customer satisfaction, ethical practices, and redefining the art of luxury living.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Core Values -->
+<section class="py-20 bg-luxury-charcoal text-white relative overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(#c6a43b 1px, transparent 1px); background-size: 30px 30px;"></div>
+
+    <div class="container mx-auto px-6 relative z-10">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div class="animate-on-scroll">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold mb-6">The Kalpvriksh Standard</h2>
+                <p class="text-gray-300 mb-8 text-lg">
+                    We don't just sell properties; we build relationships. Our core values act as our compass, guiding every interaction and transaction.
+                </p>
+                <div class="space-y-6">
+                    <div class="flex">
+                        <div class="flex-shrink-0 mr-4">
+                            <div class="w-12 h-12 rounded-full bg-luxury-gold flex items-center justify-center">
+                                <i class="fas fa-hand-holding-heart text-luxury-green text-xl"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold text-luxury-gold mb-2">Integrity First</h4>
+                            <p class="text-gray-400">Honesty is the bedrock of our business. We believe in complete transparency in pricing, paperwork, and processes.</p>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="flex-shrink-0 mr-4">
+                            <div class="w-12 h-12 rounded-full bg-luxury-gold flex items-center justify-center">
+                                <i class="fas fa-award text-luxury-green text-xl"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold text-luxury-gold mb-2">Excellence</h4>
+                            <p class="text-gray-400">We pursue excellence in everything we do, from the properties we curate to the after-sales service we provide.</p>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="flex-shrink-0 mr-4">
+                            <div class="w-12 h-12 rounded-full bg-luxury-gold flex items-center justify-center">
+                                <i class="fas fa-users text-luxury-green text-xl"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold text-luxury-gold mb-2">Client Centricity</h4>
+                            <p class="text-gray-400">You are at the center of our universe. We listen, understand, and tailor our solutions to fit your unique needs.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="animate-on-scroll">
+                <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1632&q=80" alt="Team Meeting" class="rounded-xl shadow-2xl border border-gray-700">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-20 bg-luxury-gold">
+    <div class="container mx-auto px-6 text-center">
+        <h2 class="text-3xl md:text-4xl font-serif font-bold text-luxury-green mb-6 animate-on-scroll">Ready to Find Your Dream Home?</h2>
+        <p class="text-luxury-charcoal text-lg mb-8 max-w-2xl mx-auto animate-on-scroll">Experience the Kalpvriksh difference today. Let our experts guide you to the home you've always imagined.</p>
+        <div class="flex flex-col md:flex-row justify-center gap-4 animate-on-scroll">
+            <a href="{% url 'property_list' %}" class="bg-luxury-green text-white px-8 py-3 rounded-full font-bold hover:bg-luxury-charcoal transition duration-300 shadow-lg">
+                Explore Properties
+            </a>
+            <a href="{% url 'home' %}#contact" class="bg-white text-luxury-green px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition duration-300 shadow-lg">
+                Contact Us
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
