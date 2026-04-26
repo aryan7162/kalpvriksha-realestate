@@ -2,39 +2,57 @@ from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.db.models import Q
-from .models import Property
+from rest_framework import viewsets, permissions
+from .models import Property, City, Sublocation
+from .serializers import CitySerializer, SublocationSerializer
+
+class CityViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
+    permission_classes = [permissions.AllowAny]
+
+class SublocationViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = SublocationSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        queryset = Sublocation.objects.all()
+        city_slug = self.request.query_params.get('city', None)
+        if city_slug:
+            if city_slug.isdigit():
+                queryset = queryset.filter(city_id=city_slug)
+            else:
+                queryset = queryset.filter(city__slug=city_slug)
+        return queryset
 
 def home(request):
     featured_properties = Property.objects.filter(status='published', is_featured=True)[:3]
     latest_properties = Property.objects.filter(status='published').order_by('-created_at')[:3]
+    featured_cities = City.objects.filter(is_featured=True)
     return render(request, 'home.html', {
         'featured_properties': featured_properties,
-        'latest_properties': latest_properties
+        'latest_properties': latest_properties,
+        'featured_cities': featured_cities
     })
 
 def property_list(request):
     # Get all published properties
     properties = Property.objects.filter(status='published')
     
-    # Proper city and sub-location (locality) filtering
-    city = request.GET.get('city', '')
-    locality = request.GET.get('locality', '')
+    # Proper city and sub-location filtering
+    city_slug = request.GET.get('city', '')
 
-    if city:
-        properties = properties.filter(city__iexact=city)
-        if locality:
-            properties = properties.filter(locality__iexact=locality)
-    elif locality:
-        properties = properties.filter(locality__iexact=locality)
+    if city_slug:
+        properties = properties.filter(city__slug=city_slug)
     
     # Search functionality
     search_query = request.GET.get('q')
     if search_query:
         properties = properties.filter(
             Q(title__icontains=search_query) |
-            Q(locality__icontains=search_query) |
+            Q(sublocation__name__icontains=search_query) |
             Q(address__icontains=search_query) |
-            Q(city__icontains=search_query)
+            Q(city__name__icontains=search_query)
         )
     
     # Filter by property type
@@ -70,36 +88,21 @@ def property_list(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
-    # Get unique localities for filter
-    localities = Property.objects.filter(status='published').values_list('locality', flat=True).distinct()[:20]
-    
-    cities = ['Pune', 'Mumbai', 'Bangalore', 'Gurugram', 'Noida', 'Delhi', 'Lucknow']
+    # Get cities and sublocations for filter
+    all_cities = City.objects.all()
     
     context = {
         'properties': page_obj,
         'search_query': search_query,
-        'selected_city': city,
-        'selected_locality': locality,
+        'selected_city': city_slug,
         'selected_type': property_type,
         'selected_bedrooms': bedrooms,
         'min_price': min_price,
         'max_price': max_price,
-        'localities': localities,
-        'cities': cities,
+        'cities': all_cities,
         'property_types': Property.PROPERTY_TYPES,
     }
     return render(request, 'properties/property_list.html', context)
-
-def get_cities(request):
-    """API to return unique city list."""
-    cities = list(Property.objects.filter(status='published').values_list('city', flat=True).distinct().order_by('city'))
-    return JsonResponse({'cities': cities})
-
-def get_localities(request):
-    """API to return sub-locations (localities) for a specific city."""
-    city = request.GET.get('city')
-    localities = list(Property.objects.filter(status='published', city__iexact=city).values_list('locality', flat=True).distinct().order_by('locality'))
-    return JsonResponse({'localities': localities})
 
 def property_detail(request, slug):
     property = get_object_or_404(Property, slug=slug, status='published')
@@ -134,3 +137,30 @@ def terms_of_service(request):
 
 def faq(request):
     return render(request, 'faq.html')
+
+def careers(request):
+    # Example dummy data for jobs
+    jobs = [
+        {
+            'title': 'Sales Executive',
+            'location': 'Pune',
+            'type': 'Full-time',
+            'description': 'Identify and reach out to potential buyers.',
+            'requirements': ['Excellent communication', '1-2 years experience']
+        },
+        {
+            'title': 'Digital Marketing Lead',
+            'location': 'Mumbai',
+            'type': 'Full-time',
+            'description': 'Oversee social media and SEO campaigns.',
+            'requirements': ['Expertise in Meta Ads', '3+ years experience']
+        }
+    ]
+    return render(request, 'careers.html', {'jobs': jobs})
+
+def thank_you(request):
+    return render(request, 'thank_you.html')
+
+def newsletter_subscribe(request):
+    # Placeholder for subscription logic
+    return JsonResponse({'status': 'success', 'message': 'Subscribed!'})

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from properties import views as properties_views
@@ -8,19 +8,8 @@ from leads import views as leads_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     
-    # Home
-    path('', properties_views.home, name='home'),
-    
-    # Properties
-    path('properties/', properties_views.property_list, name='property_list'),
-    path('properties/<slug:slug>/', properties_views.property_detail, name='property_detail'),
-    
-    # Static pages
-    path('about/', properties_views.about, name='about'),
-    path('contact/', properties_views.contact, name='contact'),
-    path('privacy-policy/', properties_views.privacy_policy, name='privacy_policy'),
-    path('terms-of-service/', properties_views.terms_of_service, name='terms_of_service'),
-    path('faq/', properties_views.faq, name='faq'),
+    # Properties app (includes Home, Property List, About, etc.)
+    path('', include('properties.urls')), 
     
     # Leads & Careers (Fix for 'careers' not found)
     path('lead-capture/', leads_views.lead_capture, name='lead_capture'),

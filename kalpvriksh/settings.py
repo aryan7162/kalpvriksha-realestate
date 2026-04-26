@@ -6,8 +6,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security - Change this in production!
 SECRET_KEY = 'django-insecure-your-secret-key-here-change-in-production'
-DEBUG = False
-ALLOWED_HOSTS = ALLOWED_HOSTS = ['*']
+DEBUG = True
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
@@ -53,6 +53,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'properties.context_processors.branding',
             ],
         },
     },
@@ -60,7 +61,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'kalpvriksh.wsgi.application'
 
-# Database Configuration - Using SQLite (No PostgreSQL needed!)
+# Database Configuration - Using SQLite for development
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -84,6 +85,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
+
+# Brand Settings
+SITE_LOGO_URL = 'https://media.licdn.com/dms/image/v2/D560BAQHDVZ9jORTx-A/company-logo_200_200/B56ZsmMLpgIEAM-/0/1765872287366?e=1777507200&v=beta&t=kfewwYPt3Yr0ntxnNOq8RNe6CpStMRGTovUK8xbXME0'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 

@@ -217,7 +217,7 @@
             <div class="flex justify-between items-center">
                 <!-- Logo -->
                 <div class="flex items-center space-x-3">
-                    <img src="https://media.licdn.com/dms/image/v2/D560BAQHDVZ9jORTx-A/company-logo_200_200/B56ZsmMLpgIEAM-/0/1765872287366?e=1775692800&v=beta&t=_FzwevzankxskhCuAE3LRTzSN1jBZruYWOWaPCEIVxY" alt="Kalpvriksh Logo" class="w-12 h-12 rounded-full border-2 border-luxury-gold object-cover">
+                    <img src="/media/builders/logos/logo.jpeg" alt="Kalpvriksh Logo" class="w-12 h-12 rounded-full border-2 border-luxury-gold object-cover">
                     <div>
                         <h1 class="text-2xl font-serif font-bold text-white tracking-wider">KALPVRIKSH</h1>
                         <p class="text-xs text-luxury-gold tracking-wider">REAL ESTATE</p>
@@ -229,7 +229,7 @@
                     <a href="{% url 'home' %}" class="text-white hover:text-luxury-gold transition duration-300 font-medium tracking-wide">Home</a>
                     <a href="{% url 'property_list' %}" class="text-white hover:text-luxury-gold transition duration-300 font-medium tracking-wide">Properties</a>
                     <a href="{% url 'about' %}" class="text-white hover:text-luxury-gold transition duration-300 font-medium tracking-wide">About</a>
-                    <a href="#contact" class="text-white hover:text-luxury-gold transition duration-300 font-medium tracking-wide">Contact</a>
+                    <a href="{% url 'home' %}#contact" class="text-white hover:text-luxury-gold transition duration-300 font-medium tracking-wide">Contact</a>
                 </div>
                 
                 <!-- Contact Button -->
@@ -253,7 +253,7 @@
                 <a href="{% url 'home' %}" class="text-white hover:text-luxury-gold transition py-2">Home</a>
                 <a href="{% url 'property_list' %}" class="text-white hover:text-luxury-gold transition py-2">Properties</a>
                 <a href="{% url 'about' %}" class="text-white hover:text-luxury-gold transition py-2">About</a>
-                <a href="#contact" class="text-white hover:text-luxury-gold transition py-2">Contact</a>
+                <a href="{% url 'home' %}#contact" class="text-white hover:text-luxury-gold transition py-2">Contact</a>
                 <a href="tel:+919876543210" class="bg-luxury-gold text-luxury-green px-6 py-3 rounded-full text-center font-semibold">Call Us</a>
             </div>
         </div>
@@ -274,7 +274,7 @@
     {% endif %}
     
     <!-- Main Content -->
-    <main>
+    <main class="pt-20">
         {% block content %}{% endblock %}
     </main>
     
@@ -287,7 +287,7 @@
             <div class="grid md:grid-cols-4 gap-12">
                 <div class="space-y-4">
                     <div class="flex items-center space-x-3">
-                        <img src="https://media.licdn.com/dms/image/v2/D560BAQHDVZ9jORTx-A/company-logo_200_200/B56ZsmMLpgIEAM-/0/1765872287366?e=1775692800&v=beta&t=_FzwevzankxskhCuAE3LRTzSN1jBZruYWOWaPCEIVxY" alt="Kalpvriksh Logo" class="w-10 h-10 rounded-full border border-luxury-gold object-cover">
+                        <img src="/media/builders/logos/logo.jpeg" alt="Kalpvriksh Logo" class="w-10 h-10 rounded-full border border-luxury-gold object-cover">
                         <h3 class="text-2xl font-serif font-bold">Kalpvriksh</h3>
                     </div>
                     <p class="text-gray-400 leading-relaxed">Nurturing Your Real Estate Dreams since 2010. Creating landmarks that define luxury living in Pune and beyond.</p>
@@ -350,7 +350,7 @@
             </div>
             
             <div class="border-t border-gray-700 mt-12 pt-8 text-center">
-                <p class="text-gray-400 text-sm">&copy; {% now "Y" %} Kalpvriksh Real Estate Pvt. Ltd. All rights reserved. | RERA No: P52100012345</p>
+                <p class="text-gray-400 text-sm">&copy; {% now "Y" %} Kalpvriksh Real Estate Pvt. Ltd. All rights reserved. | RERA No: A041262504685</p>
                 <p class="text-gray-500 text-xs mt-2">Crafted with <i class="fas fa-heart text-luxury-gold"></i> for luxury living</p>
             </div>
         </div>

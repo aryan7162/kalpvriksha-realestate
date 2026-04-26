@@ -2,6 +2,61 @@ from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
 
+class City(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(max_length=120, unique=True, blank=True)
+    image = models.ImageField(upload_to='cities/', blank=True, null=True)
+    is_featured = models.BooleanField(default=False, db_index=True)
+    
+    class Meta:
+        verbose_name_plural = "Cities"
+        ordering = ['name']
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+class Sublocation(models.Model):
+    city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='sublocations')
+    name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=120, blank=True)
+
+    class Meta:
+        unique_together = ('city', 'slug')
+        ordering = ['name']
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.name}, {self.city.name}"
+
+class Builder(models.Model):
+    name = models.CharField(max_length=200, db_index=True)
+    slug = models.SlugField(max_length=250, unique=True, blank=True)
+    logo = models.ImageField(upload_to='builders/logos/')
+    description = models.TextField(blank=True)
+    established_year = models.PositiveIntegerField(null=True, blank=True)
+    projects_completed = models.PositiveIntegerField(default=0)
+    website = models.URLField(blank=True)
+    
+    class Meta:
+        ordering = ['name']
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
 class Property(models.Model):
     STATUS_CHOICES = (
         ('draft', 'Draft'),
@@ -39,8 +94,8 @@ class Property(models.Model):
     
     # Location
     address = models.TextField()
-    city = models.CharField(max_length=100, db_index=True, default='Pune')
-    locality = models.CharField(max_length=100, db_index=True)
+    city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, related_name='properties')
+    sublocation = models.ForeignKey(Sublocation, on_delete=models.SET_NULL, null=True, related_name='properties')
     pincode = models.CharField(max_length=6)
     latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
@@ -54,7 +109,7 @@ class Property(models.Model):
     # Builder/Developer
     builder_name = models.CharField(max_length=200, blank=True)
     builder_logo = models.ImageField(upload_to='builders/logos/', blank=True, null=True)
-    rera_number = models.CharField(max_length=50, blank=True, null=True)
+    rera_number = models.CharField(max_length=50, blank=True, null=True, default='A041262504685')
     possession_date = models.DateField(blank=True, null=True)
     
     # SEO
@@ -82,6 +137,7 @@ class Property(models.Model):
         ordering = ['-created_at']
         indexes = [
             models.Index(fields=['city', 'status']),
+            models.Index(fields=['sublocation', 'status']),
             models.Index(fields=['price', 'status']),
             models.Index(fields=['area_sqft', 'status']),
         ]

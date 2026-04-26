@@ -24,7 +24,7 @@
                         {{ property.get_property_type_display }}
                     </span>
                     <h1 class="text-3xl md:text-5xl font-serif font-bold text-white mb-2">{{ property.title }}</h1>
-                    <p class="text-gray-300 text-lg"><i class="fas fa-map-marker-alt text-luxury-gold mr-2"></i>{{ property.locality }}, {{ property.city }}</p>
+                    <p class="text-gray-300 text-lg"><i class="fas fa-map-marker-alt text-luxury-gold mr-2"></i>{{ property.sublocation.name }}, {{ property.city.name }}</p>
                 </div>
                 <div class="animate-slide-up">
                     <p class="text-luxury-gold text-3xl md:text-4xl font-bold">₹{{ property.price|intcomma }}</p>

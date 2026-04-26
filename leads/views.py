@@ -148,7 +148,8 @@ def chatbot_api(request):
             if any(word in message for word in greetings):
                 return JsonResponse({
                     'response': 'Hello! Welcome to Kalpvriksh Real Estate. How can I assist you in finding your dream home today?',
-                    'properties': []
+                    'properties': [],
+                    'logo_url': getattr(settings, 'SITE_LOGO_URL', '')
                 })
 
             # --- Chatbot Training: Amenities ---
@@ -176,8 +177,8 @@ def chatbot_api(request):
             
             location_query = Q()
             for word in potential_keywords:
-                # Check if word matches city, locality, or title
-                location_query |= Q(locality__icontains=word) | Q(city__icontains=word) | Q(title__icontains=word)
+                # Check if word matches city, sublocation, or title
+                location_query |= Q(sublocation__name__icontains=word) | Q(city__name__icontains=word) | Q(title__icontains=word)
             
             if location_query:
                 filters &= location_query
@@ -190,18 +191,29 @@ def chatbot_api(request):
             
             response_data = {
                 'response': '',
-                'properties': []
+                'properties': [],
+                'logo_url': getattr(settings, 'SITE_LOGO_URL', '')
             }
             
             if properties.exists():
                 response_data['response'] = f"I found {properties.count()} properties that match your criteria:"
                 for p in properties:
+                    # Use provided Pune image as fallback if property has no image
+                    image_url = ''
+                    if p.main_image:
+                        image_url = p.main_image.url
+                    elif p.city and p.city.image:
+                        image_url = p.city.image.url
+                    elif p.city and p.city.name.lower() == 'pune':
+                        image_url = 'https://www.birlaadvaya.org.in/images/birla/pune-maharashtra.webp'
+
                     response_data['properties'].append({
                         'title': p.title,
                         'price': p.price, # We will format this in JS
-                        'location': f"{p.locality}, {p.city}",
-                        'image': p.main_image.url if p.main_image else '',
-                        'url': f"/properties/{p.slug}/" # Assumes standard URL structure
+                        'location': f"{p.sublocation.name}, {p.city.name}",
+                        'image': image_url,
+                        'rera': p.rera_number,
+                        'url': p.get_absolute_url()
                     })
             else:
                 response_data['response'] = "I couldn't find exact matches. Try specifying a location like 'Baner' or configuration like '3 BHK'."
