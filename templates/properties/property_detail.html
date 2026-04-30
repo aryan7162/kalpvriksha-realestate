@@ -27,9 +27,15 @@
                     <p class="text-gray-300 text-lg"><i class="fas fa-map-marker-alt text-luxury-gold mr-2"></i>{{ property.sublocation.name }}, {{ property.city.name }}</p>
                 </div>
                 <div class="animate-slide-up">
+                    {% if property.hide_price %}
+                    <p class="text-luxury-gold text-3xl md:text-4xl font-bold">Price on Request</p>
+                    {% elif property.price_display %}
+                    <p class="text-luxury-gold text-3xl md:text-4xl font-bold">{{ property.price_display }}</p>
+                    {% else %}
                     <p class="text-luxury-gold text-3xl md:text-4xl font-bold">₹{{ property.price|intcomma }}</p>
                     {% if property.price_per_sqft %}
                     <p class="text-gray-400 text-sm text-right">₹{{ property.price_per_sqft|intcomma }} / sq.ft</p>
+                    {% endif %}
                     {% endif %}
                 </div>
             </div>
@@ -47,7 +53,15 @@
                 
                 <div>
                     <p class="text-sm text-gray-500 uppercase tracking-wide">Price</p>
-                    <p class="font-bold text-luxury-charcoal text-lg">{{ property.price_range_text|default:"On Request" }}</p>
+                    <p class="font-bold text-luxury-charcoal text-lg">
+                        {% if property.hide_price %}
+                        Price on Request
+                        {% elif property.price_display %}
+                        {{ property.price_display }}
+                        {% else %}
+                        {{ property.price_range_text|default:"On Request" }}
+                        {% endif %}
+                    </p>
                 </div>
 
                 <div>
@@ -152,16 +166,45 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for config in property.configurations.all %}
                                 <tr class="border-b border-gray-100 hover:bg-gray-50">
-                                    <td class="p-4 text-gray-800 font-medium">{{ property.unit_config_text|default:"Standard Unit" }}</td>
-                                    <td class="p-4 text-gray-600">{{ property.area_sqft }} sq.ft</td>
-                                    <td class="p-4 font-bold text-luxury-charcoal">₹{{ property.price|intcomma }}</td>
+                                    <td class="p-4 text-gray-800 font-medium">{{ config.name }}</td>
+                                    <td class="p-4 text-gray-600">{{ config.carpet_area }} sq.ft (Carpet)</td>
+                                    <td class="p-4 font-bold text-luxury-charcoal">
+                                        {% if config.hide_price %}
+                                        Price on Request
+                                        {% elif config.price_display %}
+                                        {{ config.price_display }}
+                                        {% else %}
+                                        ₹{{ config.price|intcomma }}
+                                        {% endif %}
+                                    </td>
                                     <td class="p-4 text-right">
-                                        <button onclick="document.querySelector('input[name=first_name]').focus()" class="px-5 py-2 bg-luxury-gold text-luxury-green text-sm font-bold rounded-lg hover:bg-opacity-90 transition shadow-sm">
+                                        <button onclick="openEnquiryModal('{{ property.id }}', '{{ config.name }}')" class="px-5 py-2 bg-luxury-gold text-luxury-green text-sm font-bold rounded-lg hover:bg-opacity-90 transition shadow-sm">
                                             Enquire
                                         </button>
                                     </td>
                                 </tr>
+                                {% empty %}
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="p-4 text-gray-800 font-medium">{{ property.unit_config_text|default:"Standard Unit" }}</td>
+                                    <td class="p-4 text-gray-600">{{ property.area_sqft }} sq.ft</td>
+                                    <td class="p-4 font-bold text-luxury-charcoal">
+                                        {% if property.hide_price %}
+                                        Price on Request
+                                        {% elif property.price_display %}
+                                        {{ property.price_display }}
+                                        {% else %}
+                                        ₹{{ property.price|intcomma }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="p-4 text-right">
+                                        <button onclick="openEnquiryModal('{{ property.id }}', '{{ property.unit_config_text|default:'' }}')" class="px-5 py-2 bg-luxury-gold text-luxury-green text-sm font-bold rounded-lg hover:bg-opacity-90 transition shadow-sm">
+                                            Enquire
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -216,16 +259,34 @@
                 </div>
 
                 <!-- About Builder -->
-                {% if property.builder_name %}
+                {% if property.builder or property.builder_name %}
                 <div id="builder" class="bg-white rounded-xl p-8 shadow-sm border border-gray-100 scroll-mt-32">
                     <h3 class="text-2xl font-serif font-bold text-luxury-charcoal mb-6">About the Builder</h3>
-                    <div class="flex items-center gap-6">
-                        {% if property.builder_logo %}
-                        <img src="{{ property.builder_logo.url }}" alt="{{ property.builder_name }} logo" class="w-24 h-24 object-contain flex-shrink-0">
+                    <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
+                        {% if property.builder.logo %}
+                        <img src="{{ property.builder.logo.url }}" alt="{{ property.builder.name }} logo" class="w-32 h-32 object-contain flex-shrink-0 bg-gray-50 p-2 rounded-lg border border-gray-100">
+                        {% elif property.builder_logo %}
+                        <img src="{{ property.builder_logo.url }}" alt="{{ property.builder_name }} logo" class="w-32 h-32 object-contain flex-shrink-0 bg-gray-50 p-2 rounded-lg border border-gray-100">
                         {% endif %}
-                        <div>
-                            <h4 class="text-xl font-bold text-luxury-charcoal">{{ property.builder_name }}</h4>
-                            <p class="text-gray-600 mt-2">Information about the builder can be added here. This could be a new field in the Property model or fetched from a separate Builder model.</p>
+                        
+                        <div class="flex-1">
+                            <h4 class="text-2xl font-bold text-luxury-charcoal mb-3">{{ property.builder.name|default:property.builder_name }}</h4>
+                            
+                            {% if property.builder %}
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div class="bg-luxury-ivory p-3 rounded-lg text-center">
+                                    <p class="text-xs text-gray-500 uppercase">Established</p>
+                                    <p class="font-bold text-luxury-charcoal">{{ property.builder.established_year|default:"-" }}</p>
+                                </div>
+                                <div class="bg-luxury-ivory p-3 rounded-lg text-center">
+                                    <p class="text-xs text-gray-500 uppercase">Projects</p>
+                                    <p class="font-bold text-luxury-charcoal">{{ property.builder.projects_completed|default:"0" }}+</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 leading-relaxed">{{ property.builder.description|linebreaksbr }}</p>
+                            {% else %}
+                            <p class="text-gray-600">Information about the builder can be added here. This builder is managed via the legacy fields.</p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

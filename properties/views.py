@@ -41,9 +41,13 @@ def property_list(request):
     
     # Proper city and sub-location filtering
     city_slug = request.GET.get('city', '')
+    sublocation_slug = request.GET.get('sublocation', '')
 
     if city_slug:
         properties = properties.filter(city__slug=city_slug)
+    
+    if sublocation_slug:
+        properties = properties.filter(sublocation__slug=sublocation_slug)
     
     # Search functionality
     search_query = request.GET.get('q')
@@ -90,22 +94,32 @@ def property_list(request):
     
     # Get cities and sublocations for filter
     all_cities = City.objects.all()
+    sublocations = []
+    if city_slug:
+        sublocations = Sublocation.objects.filter(city__slug=city_slug)
     
     context = {
         'properties': page_obj,
         'search_query': search_query,
         'selected_city': city_slug,
+        'selected_sublocation': sublocation_slug,
         'selected_type': property_type,
         'selected_bedrooms': bedrooms,
+        'selected_sort': sort_by,
         'min_price': min_price,
         'max_price': max_price,
         'cities': all_cities,
+        'sublocations': sublocations,
         'property_types': Property.PROPERTY_TYPES,
     }
     return render(request, 'properties/property_list.html', context)
 
 def property_detail(request, slug):
-    property = get_object_or_404(Property, slug=slug, status='published')
+    property = get_object_or_404(
+        Property.objects.select_related('city', 'sublocation', 'builder').prefetch_related('configurations', 'amenities', 'gallery'), 
+        slug=slug, 
+        status='published'
+    )
     
     # Increment view count
     property.views_count += 1

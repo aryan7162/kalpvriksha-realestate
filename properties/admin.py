@@ -1,9 +1,20 @@
 from django.contrib import admin
-from .models import Property, Amenity, PropertyImage, City, Sublocation
+from .models import Property, Amenity, PropertyImage, City, Sublocation, Builder, PropertyConfiguration
 
 class PropertyImageInline(admin.TabularInline):
     model = PropertyImage
     extra = 1
+
+class PropertyConfigurationInline(admin.TabularInline):
+    model = PropertyConfiguration
+    fields = ('name', 'bedrooms', 'bathrooms', 'carpet_area', 'price', 'price_display', 'hide_price', 'floor_plan', 'is_available')
+    extra = 1
+
+@admin.register(Builder)
+class BuilderAdmin(admin.ModelAdmin):
+    list_display = ('name', 'established_year', 'projects_completed')
+    prepopulated_fields = {'slug': ('name',)}
+    search_fields = ('name',)
 
 @admin.register(City)
 class CityAdmin(admin.ModelAdmin):
@@ -22,14 +33,14 @@ class PropertyAdmin(admin.ModelAdmin):
     list_filter = ('status', 'property_type', 'city', 'sublocation', 'is_featured')
     search_fields = ('title', 'sublocation__name', 'city__name')
     prepopulated_fields = {'slug': ('title',)}
-    inlines = [PropertyImageInline]
+    inlines = [PropertyImageInline, PropertyConfigurationInline]
     fieldsets = (
         (None, {'fields': ('title', 'slug', 'status', 'is_featured', 'is_urgent_sale')}),
-        ('Property Info', {'fields': ('property_type', 'price', 'price_per_sqft', 'booking_amount', 'description')}),
+        ('Property Info', {'fields': ('property_type', 'price', 'price_display', 'hide_price', 'price_per_sqft', 'booking_amount', 'description')}),
         ('Details', {'fields': ('bedrooms', 'bathrooms', 'area_sqft', 'carpet_area', 'floor_no', 'total_floors', 'amenities')}),
         ('Location', {'fields': ('address', 'sublocation', 'city', 'pincode')}),
         ('Media', {'fields': ('main_image', 'video_url', 'floor_plan')}),
-        ('Builder', {'fields': ('builder_name', 'builder_logo', 'rera_number', 'possession_date')}),
+        ('Builder', {'fields': ('builder', 'builder_name', 'builder_logo', 'rera_number', 'possession_date')}),
     )
 
 @admin.register(Amenity)

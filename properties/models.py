@@ -81,8 +81,10 @@ class Property(models.Model):
     
     # Pricing
     price = models.DecimalField(max_digits=12, decimal_places=2, db_index=True)
+    price_display = models.CharField(max_length=100, blank=True, help_text="Custom price display (e.g. 1.1cr - 1.5cr). If empty, numerical price will be shown.")
     price_per_sqft = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     booking_amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    hide_price = models.BooleanField(default=False, help_text="Show 'Price on Request' instead of the actual price")
     
     # Property Details
     bedrooms = models.IntegerField(null=True, blank=True)
@@ -107,6 +109,7 @@ class Property(models.Model):
     floor_plan = models.ImageField(upload_to='properties/floorplans/%Y/%m/', blank=True, null=True)
     
     # Builder/Developer
+    builder = models.ForeignKey(Builder, on_delete=models.SET_NULL, null=True, blank=True, related_name='properties')
     builder_name = models.CharField(max_length=200, blank=True)
     builder_logo = models.ImageField(upload_to='builders/logos/', blank=True, null=True)
     rera_number = models.CharField(max_length=50, blank=True, null=True, default='A041262504685')
@@ -182,3 +185,18 @@ class PropertyImage(models.Model):
     
     def __str__(self):
         return self.caption or f"Image {self.id}"
+
+class PropertyConfiguration(models.Model):
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='configurations')
+    name = models.CharField(max_length=100, help_text="e.g. 2BHK Type A")
+    bedrooms = models.IntegerField()
+    bathrooms = models.IntegerField()
+    carpet_area = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=12, decimal_places=2)
+    price_display = models.CharField(max_length=100, blank=True, help_text="e.g. 1.1cr - 1.5cr")
+    hide_price = models.BooleanField(default=False)
+    floor_plan = models.ImageField(upload_to='properties/configurations/%Y/%m/', blank=True, null=True)
+    is_available = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.property.title} - {self.name}"
